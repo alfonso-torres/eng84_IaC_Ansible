@@ -153,3 +153,21 @@ ip_of_web_machine ansible_connection=ssh ansible_ssh_user=vagrant ansible_ssh_pa
 We can check if now ansible has a connection with the server running the `ping` module: `ansible -m ping web`.
 
 If the ping works, we would receive a message back with success status in green letters.
+
+- __Ansible Adhoc commands:__
+
+An Ansible ad-hoc command uses the /usr/bin/ansible command-line tool to automate a single task on one or more managed nodes. Ad-hoc commands are quick and easy, but they are not reusable. So why learn about ad-hoc commands first? Ad-hoc commands demonstrate the simplicity and power of Ansible.
+
+Ad-hoc commands are great for tasks you repeat rarely. For example, if you want to power off all the machines in your lab for Christmas vacation, you could execute a quick one-liner in Ansible without writing a playbook. An ad-hoc command looks like this:
+
+`ansible [pattern] -m [module] -a "[module options]"`
+
+- Find out the UPTIME of db server using Ansible Ad-hoc command:
+
+`ansible db -m shell -a "uptime"`
+
+- Update and upgrade all packages using Ansible Ad-hoc command:
+
+`ansible all -m shell -a "sudo apt-get update -y"`
+
+`ansible all -m shell -a "sudo apt-get upgrade -y"`
