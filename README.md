@@ -85,6 +85,8 @@ With ansible (powerful tool) you can do both (configuration and orchestration), 
 
 ### Ansible
 
+![ANSIBLE_1](./ansible.png)
+
 - Ansible is an open-source software provisioning, configuration management, and application-deployment tool enabling infrastructure as code.
 
 - Ansible is an IT automation engine that automates cloud provisioning, configuration management, application deployment, intra-service orchestration and more.
@@ -156,6 +158,10 @@ If the ping works, we would receive a message back with success status in green 
 
 - __Ansible Adhoc commands:__
 
+The Ad-Hoc command is the one-liner ansible command that performs one task on the target host. It allows you to execute simple one-line task against one or group of hosts defined on the inventory file configuration. An Ad-Hoc command will only have two parameters, the group of a host that you want to perform the task and the Ansible module to run.
+
+The Ad-Hoc command gives you more advantage for exploring ansible itself. You are able to perform tasks without creating a playbook first, such as rebooting servers, managing services, editing the line configuration, copy a file to only one host, install only one package.
+
 An Ansible ad-hoc command uses the /usr/bin/ansible command-line tool to automate a single task on one or more managed nodes. Ad-hoc commands are quick and easy, but they are not reusable. So why learn about ad-hoc commands first? Ad-hoc commands demonstrate the simplicity and power of Ansible.
 
 Ad-hoc commands are great for tasks you repeat rarely. For example, if you want to power off all the machines in your lab for Christmas vacation, you could execute a quick one-liner in Ansible without writing a playbook. An ad-hoc command looks like this:
@@ -171,3 +177,46 @@ Ad-hoc commands are great for tasks you repeat rarely. For example, if you want 
 `ansible all -m shell -a "sudo apt-get update -y"`
 
 `ansible all -m shell -a "sudo apt-get upgrade -y"`
+
+If it did not work, run this command:
+
+`ansible all -m shell -a "sudo apt-get upgrade -y" --become`: the flag --become is used to run it as a admin mode.
+
+- __Playbook:__
+
+An Ansible playbook is a blueprint of automation tasks—which are complex IT actions executed with limited or no human involvement. Ansible playbooks are executed on a set, group, or classification of hosts, which together make up an Ansible inventory.
+
+- Let's create a `yml` file: `sudo nano install_nginx.yml` (inside /etc/ansible).
+
+- Let's see the syntax of the file (watch out for indentation):
+
+````
+# This is an example of ansible playbook written in YAML
+# YAML file starts with three --- dashes(---)
+---
+
+- hosts: web
+# host is to define the name your host machine or you could do all if you would like to run the same task in all the servers
+
+  gather_facts: yes
+# gathering facts before performing any tasks
+
+  become: yes
+# become is used to get root permission to perform any taks that require admin access
+
+  tasks:
+# tasks are executed in order, one at a time, against all servers matched by the host
+# every task should a name, which is included in the output from running in the playbook
+# The goal of each task is to execute a module, with every specific arguments
+
+# In this task we would like to install Nginx on our server
+  - name: Installing Nginx
+    apt: pkg=nginx state=present
+
+   # notify:
+   # - restart nginx
+   # - name: Enable nginx during boot
+     # service: name=nginx state=started enabled=yes
+````
+
+- Run the playbook: `ansible-playbook install_nginx.yml`.
