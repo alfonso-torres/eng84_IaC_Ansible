@@ -420,3 +420,7 @@ sudo passwd
 ````
 
 - After that you can go back to your controller and re-run your playbook and your problem should be fixed. Everything has gone back to the way it was before, without ansible vault.
+
+### Task
+
+Click here, [link](https://github.com/alfonso-torres/eng84_ansible_controller_task), to see the practical implementation. ENJOY THE TASK!
