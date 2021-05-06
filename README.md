@@ -96,7 +96,7 @@ With ansible (powerful tool) you can do both (configuration and orchestration), 
 - Alibaba Travels
 - etc
 
-There are 1447 companies reportedly use Ansible in their tech stacks.
+There are 1447 companies reportedly use IaC/Ansible in their tech stacks.
 
 ### Ansible
 
