@@ -83,6 +83,21 @@ Once we've created the templates for all the parts of the system, we need orches
 
 With ansible (powerful tool) you can do both (configuration and orchestration), but we will use ansiblle only for configuration management, and for orchestration we will use terraform.
 
+### Who is using it?
+
+- Cisco
+- Hennge
+- DLT
+- EA Sports
+- NASA
+- TWITTER
+- Udemy
+- Revolut
+- Alibaba Travels
+- etc
+
+There are 1447 companies reportedly use Ansible in their tech stacks.
+
 ### Ansible
 
 ![ANSIBLE_1](./ansible.png)
