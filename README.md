@@ -156,6 +156,8 @@ We can check if now ansible has a connection with the server running the `ping` 
 
 If the ping works, we would receive a message back with success status in green letters.
 
+Do the same with db.
+
 - __Ansible Adhoc commands:__
 
 The Ad-Hoc command is the one-liner ansible command that performs one task on the target host. It allows you to execute simple one-line task against one or group of hosts defined on the inventory file configuration. An Ad-Hoc command will only have two parameters, the group of a host that you want to perform the task and the Ansible module to run.
@@ -167,6 +169,10 @@ An Ansible ad-hoc command uses the /usr/bin/ansible command-line tool to automat
 Ad-hoc commands are great for tasks you repeat rarely. For example, if you want to power off all the machines in your lab for Christmas vacation, you could execute a quick one-liner in Ansible without writing a playbook. An ad-hoc command looks like this:
 
 `ansible [pattern] -m [module] -a "[module options]"`
+
+- `-m` specifies a module
+
+- `-a` just means adhoc
 
 - Find out the UPTIME of db server using Ansible Ad-hoc command:
 
@@ -182,9 +188,33 @@ If it did not work, run this command:
 
 `ansible all -m shell -a "sudo apt-get upgrade -y" --become`: the flag --become is used to run it as a admin mode.
 
+Basic commands:
+
+- To ping: `ansible -m ping web` or `ansible web -m ping`. You can ping both machines at the same time `ansible all -m ping`.
+
+- `ansible web -a "uname -a"`
+
+- `ansible web -a "date"`
+
+- `ansible web -a "free -m"`
+
+- `ansible web -m shell -a "ls -a"`
+
+- `ansible all -m shell -a "uptime"`
+
+- `ansible all -a "uptime"`
+
+- `ansible db -m shell -a "uptime"`
+
+- To know more about them, [link](https://docs.ansible.com/ansible/latest/user_guide/intro_adhoc.html).
+
 - __Playbook:__
 
 An Ansible playbook is a blueprint of automation tasks—which are complex IT actions executed with limited or no human involvement. Ansible playbooks are executed on a set, group, or classification of hosts, which together make up an Ansible inventory.
+
+Ansible playbooks help IT staff program applications, services, server nodes, or other devices without the manual overhead of creating everything from scratch. And Ansible playbooks—as well as the conditions, variables, and tasks within them—can be saved, shared, or reused indefinitely.
+
+An Ansible playbook is an organized unit of scripts that defines work for a server configuration managed by the automation tool Ansible. The playbook is the core component of any Ansible configuration. An Ansible playbook contains one or multiple plays, each of which define the work to be done for a configuration on a managed server. Ansible plays are written in YAML. Every play is created by an administrator with environment-specific parameters for the target machines
 
 - Let's create a `yml` file: `sudo nano install_nginx.yml` (inside /etc/ansible).
 
@@ -220,3 +250,173 @@ An Ansible playbook is a blueprint of automation tasks—which are complex IT ac
 ````
 
 - Run the playbook: `ansible-playbook install_nginx.yml`.
+
+- Let's create a `yml` file: `sudo nano install_nginx.yml` (inside /etc/ansible).
+
+````
+---
+# Install SQL on DB machine
+- hosts: db
+# hosts will look for db in the hosts/inventory file
+
+  become: true
+# running in admin mode
+
+  tasks:
+# instructions/code/script to install SQL
+  - name: Installing SQL in the DB server
+    apt: pkg=mysql-server state=present
+# the db will have the sql installed and available/enabled
+````
+
+- Run the playbook: `ansible-playbook install_sql.yml`.
+
+- The name of the tasks should be relevant for the reason that we will see in the output what tasks are executing.
+
+````
+PLAY RECAP *********************************************************************
+192.168.33.11              : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+````
+
+If we run something and it wasn't modified, it could be a problem. But it was changed and we run the playbook again, then the changed flag should be 0 because we have already installed it and by default it will check that it is already installed so it is not necessary to install again.
+
+````
+PLAY RECAP *********************************************************************
+192.168.33.11              : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0 
+````
+
+- Let's create a `yml` file: `sudo nano install_nodejs.yml` (inside /etc/ansible).
+
+````
+---
+# Install SQL on DB machine
+- hosts: db
+# hosts will look for db in the hosts/inventory file
+
+  become: true
+# running in admin mode
+
+  tasks:
+# instructions/code/script to install SQL
+  - name: Installing SQL in the DB server
+    apt: pkg=mysql-server state=present
+# the db will have the sql installed and available/enabled
+vagrant@controller:/etc/ansible$ cat install_nodejs.yml 
+---
+- hosts: web
+  gather_facts: yes
+  become: true
+
+  tasks:
+  - name: Installing nodejs in the web server
+    apt: pkg=nodejs state=present
+
+  - name: Installing NPM
+    apt: pkg=npm state=present
+````
+
+- Run the playbook: `ansible-playbook install_nodejs.yml`.
+
+- Let's create a `yml` file: `sudo nano install_mongodb.yml` (inside /etc/ansible).
+
+````
+---
+# Installing Mongodb for our db to connect to web app so the /posts can work
+
+- hosts: db
+  gather_facts: yes
+  become: true
+
+  tasks:
+  - name: Installing Mongodb into our DB server 192.168.33.11
+    apt: pkg=mongodb state=present
+````
+
+- Run the playbook: `ansible-playbook install_mongodb.yml`.
+
+Four simple playbooks to understand all the syntax.
+
+But we can put all the code together to run everything just once.
+
+- YAML Ain't Markup Language: A markup language is a computer language that uses tags to define elements within a document. It is human-readable, meaning markup files contain standard words, rather than typical programming syntax. While several markup languages exist, the two most popular are HTML and XML
+
+So, with Ansible we first used some ad-hoc commands to have some kind of remote execution or remote administration interface. With each command we choose the server (or server group) on which this command should be run. As we wanted more complex remote administration to be run, we stuck with the use case and put the commands in a (predefined) playbook, which should be run on hosts of my choice. Ansible adhoc can be used for a quick check, since playbook to do more than one task.
+
+- __Ansible Vault:__
+
+![vault](./vault.png)
+
+Ansible Vault is a feature of ansible that allows you to keep sensitive data such as passwords or keys in encrypted files, rather than as plaintext in playbooks or roles. These vault files can then be distributed or placed in source control.
+
+Encryption with Ansible Vault ONLY protects ‘data at rest’. Once the content is decrypted (‘data in use’), play and plugin authors are responsible for avoiding any secret disclosure, see no_log for details on hiding output and Steps to secure your editor for security considerations on editors you use with Ansible Vault.
+
+- Inside de controller, run these commands:
+
+````
+sudo apt-add-repository --yes --update ppa:ansible/ansible
+sudo apt install ansible -y
+sudo apt install python3-pip -y
+pip3 install awscli
+pip3 install boto boto3
+sudo apt-get update -y
+sudo apt-get upgrade -y
+````
+
+- After installing everything, in the folder /etc/ansible, run:
+
+````
+sudo mkdir group_vars
+cd group_vars
+sudo mkdir all
+cd all
+````
+
+- Then, we are going to create our file of ansible vault:
+
+`sudo ansible-vault create pass.yml` -> write down a password
+
+- Inside the file enter:
+
+````
+aws_access_key: THISISMYACCESSKEY
+aws_secret_key: THISISMYSECRETKEY
+````
+
+- Press Esc and then `:wq` to save the file.
+
+- Run `sudo cat pass.yml` and you will see it is encrypted. Amazing, we have created our ansible vault.
+
+- In our case we will use ansible vault to create instances in amazon web services from the controller.
+
+- Therefore if we create a file called `create_ec2_instance.yml`, we will execute it as follows to connect to aws using our ansible vault:
+
+`sudo ansible-playbook create_ec2_instance.yml --ask-vault-pass`
+
+- In the case of running right now on one of our previously created playbooks:
+
+`sudo ansible-playbook install_nginx.yml --ask-vault-pass`
+
+Enter the password but you will see an error because we are not doing nothing related with AWS.
+
+- Try to run without vault: `sudo ansible-playbook install_nginx.yml`. You will see an error so we have to resolve it.
+
+- Let's delete the `pass.yml` file.
+
+- Then ssh for both machines, web and app, and do the following steps:
+
+````
+# Next go to
+cd etc/ssh
+# next open sshd_config file
+sudo nano sshd_config
+# change below permissions
+# PermitRootLogin yes
+# change authentication to yes
+# PasswordAuthentication yes
+# save and exit the file
+# restart the ssh service
+sudo systemctl restart ssh
+sudo passwd
+````
+
+- After that you can go back to your controller and re-run your playbook and your problem should be fixed. Everything has gone back to the way it was before, without ansible vault.
