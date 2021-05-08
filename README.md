@@ -351,6 +351,20 @@ vagrant@controller:/etc/ansible$ cat install_nodejs.yml
 
 Four simple playbooks to understand all the syntax.
 
+- Let's run `tree` inside `/etc/ansible`:
+
+````
+.
+├── ansible.cfg
+├── hosts
+├── install_mongodb.yml
+├── install_nginx.yml
+├── install_nodejs.yml
+├── install_sql.yml
+└── roles
+
+````
+
 But we can put all the code together to run everything just once.
 
 - YAML Ain't Markup Language: A markup language is a computer language that uses tags to define elements within a document. It is human-readable, meaning markup files contain standard words, rather than typical programming syntax. While several markup languages exist, the two most popular are HTML and XML
@@ -399,13 +413,45 @@ aws_secret_key: THISISMYSECRETKEY
 
 - Press Esc and then `:wq` to save the file.
 
-- Run `sudo cat pass.yml` and you will see it is encrypted. Amazing, we have created our ansible vault.
+- Run `sudo cat pass.yml` and you will see it is encrypted. Amazing, we have created our ansible vault:
+
+````
+$ANSIBLE_VAULT;1.1;AES256
+38663330623530633036386261626338643735663966323637333239633530306231633032666563
+6364346534636466316461623132643133623062663266330a623364376438343032356165383766
+62393864373536326531336539323264643834346166633632636663396436613663643837613533
+6666336461623266340a366465643934356564353166663237303633653637643336363465343165
+62396134646565376333303965653761363933626166343535373333643066633633326139373362
+32656434326634613166393364333661333661623862336538363033633033393763316238383661
+38653865646634303432306233643839633462343635313039653461313237336165636539333065
+33363663653438383433376237623435623037626530366265323638333739316566323434353236
+3639
+````
 
 - In our case we will use ansible vault to create instances in amazon web services from the controller.
 
-- Therefore if we create a file called `create_ec2_instance.yml`, we will execute it as follows to connect to aws using our ansible vault:
+- Therefore with ansible vault we will have our secure AWS key which we will make use of below. We will only use ansible vault when we want to run a playbook with the aim of creating infrastructure on AWS, or on another provider.
+
+- If we create a file called `create_ec2_instance.yml`, we will execute it as follows to connect to aws using our ansible vault:
 
 `sudo ansible-playbook create_ec2_instance.yml --ask-vault-pass`
+
+- Let's run `tree` inside `/etc/ansible`:
+
+````
+.
+├── ansible.cfg
+├── create_ec2_instance.yml
+├── group_vars
+│   └── all
+│       └── pass.yml
+├── hosts
+├── install_mongodb.yml
+├── install_nginx.yml
+├── install_nodejs.yml
+├── install_sql.yml
+└── roles
+````
 
 - In the case of running right now on one of our previously created playbooks:
 
