@@ -159,6 +159,18 @@ We can access from the controller to the web or db machines using ssh: `ssh vagr
 
 Let's install the tree command: `sudo apt-get install tree -y`. The tree is a tiny, cross-platform command-line program used to recursively list or display the content of a directory in a tree-like format.
 
+- Let's run `tree` inside `/etc/ansible`:
+
+````
+.
+├── ansible.cfg
+├── hosts
+└── roles
+
+````
+
+We can see what the ansible structure looks like.
+
 In the `/etc/ansible/hosts`, we will need to add the connections. Let's open the file `sudo nano /etc/ansible/hosts` and added this lines:
 
 ````
