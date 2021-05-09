@@ -106,7 +106,7 @@ There are 1447 companies reportedly use IaC/Ansible in their tech stacks.
 
 - Ansible is an IT automation engine that automates cloud provisioning, configuration management, application deployment, intra-service orchestration and more.
 
-- It is a __automation__ tool. Configuration management and orchestration tool that helps us autome the task that we usually do manually.
+- It is a __automation__ tool. Configuration management and orchestration tool that helps us automate the task that we usually do manually.
 
 It works only on Mac and Linux.
 
@@ -120,7 +120,7 @@ __Key benefits/Why Ansible__
 
 - __Efficient SDLC:__ Integrates with other tools, so we can change provider very easily. If you write a script for one platform (aws) then you can easily switch to another (azure). All we need to do is change the cloud provider, that's it. With integration, you can use ansible with docker for example.
 
-- It is a __automation__ tool. Configuration management and orchestration tool that helps us autome the task that we usually do manually.
+- It is a __automation__ tool. Configuration management and orchestration tool that helps us automate the task that we usually do manually.
 
 - You don't need to have previous experience/knowledge of scripting.
 
@@ -437,7 +437,6 @@ $ANSIBLE_VAULT;1.1;AES256
 32656434326634613166393364333661333661623862336538363033633033393763316238383661
 38653865646634303432306233643839633462343635313039653461313237336165636539333065
 33363663653438383433376237623435623037626530366265323638333739316566323434353236
-3639
 ````
 
 - In our case we will use ansible vault to create instances in amazon web services from the controller.
